@@ -70,27 +70,46 @@ person who wrote the rules, not a benchmark.
 
 ## False alerts on common Moroccan names, real lists
 
-500 fictional customers (random combinations of common Moroccan first and family
-names, random birth year) screened against the full OFAC SDN + UN lists (20,602
-entries). Since they are invented, every alert is a false alert. Detection is
-checked on 300 real listed individuals with Arabic names, re-spelled
-(Muhammad -> Mohamed, Abd al-Rahman -> Abdelrahman...), with their listed birth year.
+5,000 fictional customers (random combinations of common Moroccan first and family
+names, random birth year, nationality Morocco) screened against the full OFAC SDN +
+UN lists (20,602 entries). Since they are invented, every alert is a false alert.
+95% intervals in brackets.
 
-| | false alerts | listed people found |
+| | false alerts |
+|---|---|
+| plain fuzzy search, `token_set_ratio` >= 80 | 21.8% [20.7-22.9] |
+| plain fuzzy search, `token_sort_ratio` >= 80 (best simple method) | 5.9% [5.3-6.6] |
+| normalization + scoring, name only | 1.2% [1.0-1.6] |
+| normalization + scoring + birth year | 0.4% [0.2-0.6] |
+| normalization + scoring + birth year + nationality | 0.2% [0.1-0.3] |
+
+**Detection costs.** 1,200 real listed individuals with Arabic names, altered in
+ways the normalizer was never taught, screened with their listed birth year:
+
+| alteration | best plain fuzzy (`token_sort`) | normalization + scoring + birth year |
 |---|---|---|
-| plain fuzzy search, `token_set_ratio` >= 80 | 17.6% | 95.0% |
-| plain fuzzy search, `token_sort_ratio` >= 80 | 6.0% | 89.3% |
-| normalization + scoring, name only | 1.6% | 100% |
-| normalization + scoring + birth year | 0.2% | 100% |
+| typo (one letter added, dropped or swapped) | 94.0% | 80.3% |
+| middle name dropped | 83.0% | 86.7% |
+| word order reversed | 100% | 100% |
+| transliteration not in the variant table (Hacen, Ehmed, Mouhamad...) | 87.0% | 43.7% |
+| **all** | **91.0%** | **77.7%** |
 
-The one remaining false alert is a near-exact namesake ("Noureddine Idrissi", 1965,
-vs the UN's "Drissi Noureddine", 1964): an alert an analyst should see. Caveats:
-the re-spellings use the same variants the normalizer knows, so 100% detection is
-optimistic; 1/500 has a 95% interval of about 0-1.1%; the matching thresholds were
-tuned on names like these, so this is not an independent test set.
+So: false alerts drop from 5.9% to 0.4%, but on spellings it was not built for,
+the screener finds 77.7% of listed people against 91.0% for the best plain fuzzy
+search. Known cause: a word that appears nowhere in the list (a typo, an unknown
+transliteration) gets the highest rarity weight, so the coverage rule treats it as
+a missing distinctive name part and rejects the match.
+
+The remaining false alerts are near-exact namesakes. Example: "Noureddine Idrissi",
+born 1965, against the UN's "Drissi Noureddine", born 1964. The nationality mismatch
+(Morocco vs Tunisia) costs 10 points but the score stays at 90, so the analyst still
+sees it.
+
+Limits: the names are invented; the matching thresholds were tuned on similar names,
+so this is not an independent test set.
 
 ```bash
-python tools/false_alert_benchmark.py --n 500 --seed 42   # ~3 min, no API key needed
+python tools/false_alert_benchmark.py --n 5000 --seed 42   # ~15 min on 7 cores, no API key needed
 ```
 
 ## Run it
