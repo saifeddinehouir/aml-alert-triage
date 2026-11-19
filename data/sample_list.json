@@ -1,0 +1,111 @@
+[
+ {
+  "uid": "SAMPLE:1",
+  "source": "Sample list (fictional)",
+  "name": "Muhammad Abd al-Rahman Qasimi",
+  "aliases": [
+   "Abu Hamza al-Qasimi"
+  ],
+  "dob_years": [
+   1971
+  ],
+  "nationalities": [
+   "Syria"
+  ],
+  "programs": [
+   "SAMPLE-TERRORISM"
+  ],
+  "original_script": "محمد عبد الرحمن القاسمي"
+ },
+ {
+  "uid": "SAMPLE:2",
+  "source": "Sample list (fictional)",
+  "name": "Yusuf Ibrahim Darwani",
+  "dob_years": [
+   1983
+  ],
+  "nationalities": [
+   "Yemen"
+  ],
+  "programs": [
+   "SAMPLE-TERRORISM"
+  ]
+ },
+ {
+  "uid": "SAMPLE:3",
+  "source": "Sample list (fictional)",
+  "name": "Husayn Ali Tarabzi",
+  "dob_years": [
+   1965
+  ],
+  "nationalities": [
+   "Iran"
+  ],
+  "programs": [
+   "SAMPLE-NONPROLIFERATION"
+  ]
+ },
+ {
+  "uid": "SAMPLE:4",
+  "source": "Sample list (fictional)",
+  "name": "Elena Viktorovna Marchenko",
+  "dob_years": [
+   1979
+  ],
+  "nationalities": [
+   "Russia"
+  ],
+  "programs": [
+   "SAMPLE-RUSSIA"
+  ]
+ },
+ {
+  "uid": "SAMPLE:5",
+  "source": "Sample list (fictional)",
+  "name": "Golden Crescent Trading LLC",
+  "aliases": [
+   "Golden Crescent General Trading"
+  ],
+  "entity_type": "entity",
+  "programs": [
+   "SAMPLE-TERRORISM"
+  ]
+ },
+ {
+  "uid": "SAMPLE:6",
+  "source": "Sample list (fictional)",
+  "name": "Khalid Umar Bensaleh",
+  "dob_years": [
+   1990
+  ],
+  "nationalities": [
+   "Libya"
+  ],
+  "programs": [
+   "SAMPLE-LIBYA"
+  ]
+ },
+ {
+  "uid": "SAMPLE:7",
+  "source": "Sample list (fictional)",
+  "name": "Nordvik Shipping Ltd",
+  "entity_type": "entity",
+  "programs": [
+   "SAMPLE-DPRK"
+  ]
+ },
+ {
+  "uid": "SAMPLE:8",
+  "source": "Sample list (fictional)",
+  "name": "Ahmad Said Mansouri",
+  "dob_years": [
+   1958
+  ],
+  "nationalities": [
+   "Iraq"
+  ],
+  "programs": [
+   "SAMPLE-IRAQ"
+  ]
+ }
+]

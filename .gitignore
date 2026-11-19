@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.sqlite3
+.venv/
+.env
+data/sdn.csv
+data/alt.csv
+data/un_consolidated.xml
+*.egg-info/
