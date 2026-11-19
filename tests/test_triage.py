@@ -157,3 +157,14 @@ def test_api_flow(tmp_path, monkeypatch):
     assert r.status_code == 200 and r.json()["status"] == "escalated"
     assert [e["action"] for e in c.get(f"/v1/cases/{rep['case_id']}/audit").json()][-1] == "decision"
     assert c.get("/v1/audit/verify").json()["ok"]
+
+
+def test_list_refresh_keeps_old_lists_when_download_fails(tmp_path, monkeypatch):
+    eng = Triage(SCREENER, AuditLog(str(tmp_path / "a.db")))
+    monkeypatch.setattr(api, "_engine", eng)
+    monkeypatch.setattr(api, "download_lists", lambda d: {"sdn.csv": "timed out"})
+    assert not api.refresh_lists() and eng.screener is SCREENER
+
+    monkeypatch.setattr(api, "download_lists", lambda d: {})
+    assert api.refresh_lists() and eng.screener is not SCREENER
+    assert [e["action"] for e in eng.audit.events()][-2:] == ["lists_refresh_failed", "lists_refreshed"]

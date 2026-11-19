@@ -72,7 +72,7 @@ person who wrote the rules, not a benchmark.
 
 ```bash
 pip install -e ".[dev]"
-pytest                      # 21 tests, no API key needed
+pytest                      # 22 tests, no API key needed
 python evaluate.py          # scores the 20 alerts with the mock writer
 python evaluate.py --llm    # same, with Claude writing the summaries (needs ANTHROPIC_API_KEY)
 
@@ -94,6 +94,7 @@ curl -s localhost:8000/v1/alerts/triage -H 'content-type: application/json' \
 | `POST /v1/alerts/triage` | full triage, returns the draft case |
 | `POST /v1/cases/{id}/decision` | analyst decision: escalate, close, request_information |
 | `GET /v1/cases/{id}/audit` | every logged event for a case |
+| `GET /v1/lists` | loaded list sizes, their age, refresh interval |
 | `GET /v1/audit/verify` | checks the whole hash chain |
 
 | Variable | Default | |
@@ -102,6 +103,9 @@ curl -s localhost:8000/v1/alerts/triage -H 'content-type: application/json' \
 | `ANTHROPIC_MODEL` | `claude-sonnet-5-5` | |
 | `DATA_DIR` | `./data` | real lists are used when present, the sample otherwise |
 | `AUDIT_DB` | `audit.sqlite3` | |
+| `LIST_REFRESH_HOURS` | `24` | the server re-downloads OFAC + UN lists when older than this and swaps them in without a restart; failures keep the old lists and retry after an hour; `0` turns it off |
+
+Settings can also go in a `.env` file in the project root (git-ignored).
 
 ## Not done yet
 

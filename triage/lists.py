@@ -9,7 +9,10 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import re
+import time
+import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -131,6 +134,42 @@ def load_un(xml_path: str | Path) -> list[ListEntry]:
                 programs=[(ent.findtext("UN_LIST_TYPE") or "").strip()],
             ))
     return out
+
+
+SOURCES = {
+    "sdn.csv": "https://www.treasury.gov/ofac/downloads/sdn.csv",
+    "alt.csv": "https://www.treasury.gov/ofac/downloads/alt.csv",
+    "un_consolidated.xml": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
+}
+
+
+def download_lists(data_dir: str | Path) -> dict[str, str]:
+    """Fetch every source into data_dir. Returns {file: error} for the ones that failed.
+
+    Each file is written next to its target and renamed into place, so a failed or
+    half-finished download never replaces a good list."""
+    d = Path(data_dir)
+    d.mkdir(exist_ok=True)
+    failed: dict[str, str] = {}
+    for name, url in SOURCES.items():
+        part = d / f"{name}.part"
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "aml-alert-triage/0.1"})
+            with urllib.request.urlopen(req, timeout=120) as r:
+                part.write_bytes(r.read())
+            os.replace(part, d / name)
+        except Exception as e:
+            part.unlink(missing_ok=True)
+            failed[name] = str(e)
+    return failed
+
+
+def lists_age_hours(data_dir: str | Path) -> float | None:
+    """Age of the oldest downloaded list file, None if any is missing."""
+    paths = [Path(data_dir) / n for n in SOURCES]
+    if not all(p.exists() for p in paths):
+        return None
+    return (time.time() - min(p.stat().st_mtime for p in paths)) / 3600
 
 
 def load_all(data_dir: str | Path) -> list[ListEntry]:
