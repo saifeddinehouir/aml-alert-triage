@@ -27,6 +27,11 @@ analyst decision ─► audit log (hash-chained, append-only)
   Abdelrahman / Abd al-Rahman, Youssef / Yusuf, Ben Saleh / bin Saleh),
   particles and company suffixes are ignored, and names in Arabic script match
   the lists' original-script field. A first name alone never triggers a hit.
+- **Built for full-size lists.** Name parts are weighted by how rare they are in the
+  loaded list, so "Mohamed Ali" does not hit every listed person whose longer name
+  contains both words, and "Ali Reza Ahmadi" does not hit "Ali Reza Zahedi". OFAC
+  birth years and nationalities are read only from their labelled remark fields, so
+  passport expiry dates never count as a birth year.
 - **Explainable scores.** Each hit lists its name similarity and every
   adjustment: birth year match +5 or mismatch -20, nationality +3 or -10.
   Strong name matches pushed under the threshold by identifiers are kept as
