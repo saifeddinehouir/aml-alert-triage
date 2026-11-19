@@ -56,6 +56,8 @@ def tokens(name: str) -> list[str]:
             out.append("abd")
             tok = m.group(2)
             tok = re.sub(r"^(el|al|ul|ar|ur|er)", "", tok) or tok
+            if tok in ("lah", "llah"):  # "abdullah" lost the "al" of "abd allah" to the prefix
+                tok = "allah"
         if tok in _PARTICLES:
             continue
         out.append(_CANON.get(tok, tok))

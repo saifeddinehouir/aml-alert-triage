@@ -67,7 +67,7 @@ person who wrote the rules, not a benchmark.
 
 ```bash
 pip install -e ".[dev]"
-pytest                      # 20 tests, no API key needed
+pytest                      # 21 tests, no API key needed
 python evaluate.py          # scores the 20 alerts with the mock writer
 python evaluate.py --llm    # same, with Claude writing the summaries (needs ANTHROPIC_API_KEY)
 

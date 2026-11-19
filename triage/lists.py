@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -46,13 +47,15 @@ def load_ofac(sdn_csv: str | Path, alt_csv: str | Path | None = None) -> list[Li
             if len(row) < 12:
                 continue
             ent_num, name, typ, program, *_rest = row
-            remarks = clean(row[11])
+            remarks = _remark_fields(clean(row[11]))
             typ = clean(typ).lower() or "entity"
-            years = [int(y) for y in _years_in(remarks)] if "DOB" in remarks else []
             entries[ent_num] = ListEntry(
                 uid=f"OFAC:{ent_num}", source="OFAC SDN", name=_ofac_name(clean(name)),
-                entity_type=typ, programs=[p.strip() for p in clean(program).split(";") if p.strip()],
-                dob_years=years,
+                entity_type=typ,
+                # several programs are written "SDGT] [IFSR"
+                programs=[p.strip(" []") for p in re.split(r"\]\s*\[|;", clean(program)) if p.strip(" []")],
+                dob_years=sorted({y for v in remarks.get("dob", []) for y in _years_in(v)}),
+                nationalities=list(dict.fromkeys(remarks.get("nationality", []) + remarks.get("citizen", []))),
             )
     if alt_csv and Path(alt_csv).exists():
         with open(alt_csv, newline="", encoding="latin-1") as f:
@@ -70,9 +73,24 @@ def _ofac_name(name: str) -> str:
     return name
 
 
-def _years_in(text: str) -> list[str]:
-    import re
-    return re.findall(r"\b(19\d{2}|20\d{2})\b", text)
+def _remark_fields(remarks: str) -> dict[str, list[str]]:
+    """'DOB 1960 to 1962; alt. DOB 1965; nationality Iran; Passport ... expires 2017'
+    -> {"dob": ["1960 to 1962", "1965"], "nationality": ["Iran"]}. Only the labelled
+    field is read, so passport and ID dates never count as birth years."""
+    out: dict[str, list[str]] = {}
+    for part in remarks.split(";"):
+        m = re.match(r"\s*(?:alt\.\s*)?(DOB|nationality|citizen)\s+(.+)", part, re.I)
+        if m:
+            out.setdefault(m.group(1).lower(), []).append(m.group(2).strip(" ."))
+    return out
+
+
+def _years_in(text: str) -> list[int]:
+    """Years in a date, or every year of a range like '1960 to 1962'."""
+    years = [int(y) for y in re.findall(r"\b(19\d{2}|20\d{2})\b", text)]
+    if len(years) == 2 and " to " in text and 0 < years[1] - years[0] <= 15:
+        return list(range(years[0], years[1] + 1))
+    return years
 
 
 def load_un(xml_path: str | Path) -> list[ListEntry]:
@@ -86,9 +104,13 @@ def load_un(xml_path: str | Path) -> list[ListEntry]:
         aliases = [(a.findtext("ALIAS_NAME") or "").strip() for a in ind.findall("INDIVIDUAL_ALIAS")]
         years: list[int] = []
         for d in ind.findall("INDIVIDUAL_DATE_OF_BIRTH"):
-            for tag in ("YEAR", "FROM_YEAR", "TO_YEAR"):
-                if (d.findtext(tag) or "").strip().isdigit():
-                    years.append(int(d.findtext(tag)))
+            if (d.findtext("YEAR") or "").strip().isdigit():
+                years.append(int(d.findtext("YEAR")))
+            span = (d.findtext("FROM_YEAR") or "").strip(), (d.findtext("TO_YEAR") or "").strip()
+            if all(s.isdigit() for s in span):
+                years += _years_in(f"{span[0]} to {span[1]}")
+            else:
+                years += [int(s) for s in span if s.isdigit()]
             date = (d.findtext("DATE") or "")[:4]
             if date.isdigit():
                 years.append(int(date))
