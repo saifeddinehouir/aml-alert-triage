@@ -68,6 +68,31 @@ system recommends closing it as a namesake; the label says "request
 information". Both are defensible. This is a sanity check written by the same
 person who wrote the rules, not a benchmark.
 
+## False alerts on common Moroccan names, real lists
+
+500 fictional customers (random combinations of common Moroccan first and family
+names, random birth year) screened against the full OFAC SDN + UN lists (20,602
+entries). Since they are invented, every alert is a false alert. Detection is
+checked on 300 real listed individuals with Arabic names, re-spelled
+(Muhammad -> Mohamed, Abd al-Rahman -> Abdelrahman...), with their listed birth year.
+
+| | false alerts | listed people found |
+|---|---|---|
+| plain fuzzy search, `token_set_ratio` >= 80 | 17.6% | 95.0% |
+| plain fuzzy search, `token_sort_ratio` >= 80 | 6.0% | 89.3% |
+| normalization + scoring, name only | 1.6% | 100% |
+| normalization + scoring + birth year | 0.2% | 100% |
+
+The one remaining false alert is a near-exact namesake ("Noureddine Idrissi", 1965,
+vs the UN's "Drissi Noureddine", 1964): an alert an analyst should see. Caveats:
+the re-spellings use the same variants the normalizer knows, so 100% detection is
+optimistic; 1/500 has a 95% interval of about 0-1.1%; the matching thresholds were
+tuned on names like these, so this is not an independent test set.
+
+```bash
+python tools/false_alert_benchmark.py --n 500 --seed 42   # ~3 min, no API key needed
+```
+
 ## Run it
 
 ```bash
@@ -130,6 +155,7 @@ triage/
   api.py        FastAPI app
 evaluate.py     scores data/alerts.jsonl
 tools/fetch_lists.py
+tools/false_alert_benchmark.py
 ```
 
 All people and companies in `data/` are fictional.
