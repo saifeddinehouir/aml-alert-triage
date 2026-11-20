@@ -133,13 +133,36 @@ Brahim, Omer, Kassem...):
 On spellings it was not tuned on, the screener still misses more unknown
 transliterations than plain fuzzy search: the consonant skeleton does not cover
 final-consonant devoicing (Ahmet / Ahmad, Muhamet), kh / h (Mukhammad, Halid), dropped
-initial vowels (Brahim) or names with fewer than three consonants (Omer, Sayeed). This
-is the honest figure: about 5x fewer false alerts than the best simple method, for
-3 points less detection overall.
+initial vowels (Brahim) or names with fewer than three consonants (Omer, Sayeed).
+
+**Same detection, compared.** The table above compares each method at its own default
+threshold, where the stricter screener naturally finds less. Sweeping the threshold
+from 60 to 95 on the same held-out data, with no retuning, compares them at equal
+detection:
+
+![Detection vs false alerts across thresholds](docs/threshold_curve.svg)
+
+| at the detection of plain `token_sort` >= 80 (88.5%) | threshold | detection | false alerts |
+|---|---|---|---|
+| plain fuzzy, `token_set_ratio` | 89 | 88.8% | 14.3% |
+| plain fuzzy, `token_sort_ratio` (best simple) | 80 | 88.5% | 6.2% |
+| normalization + scoring + birth year | 71 | 88.6% | 2.8% |
+| normalization + scoring + birth year + nationality | 73 | 89.2% | 1.0% |
+
+Same detection as the best simple method, with 2.2x fewer false alerts (6x with
+nationality), measured on spellings never used for tuning. The other way round, plain
+`token_sort` needs 2.9% false alerts (threshold 82) to match this screener's 85.2% at
+its default threshold of 80, where the screener has 1.3%.
+
+The screener's curve is flat above 80: its scores are either high or pushed far down
+by the coverage rule, so most of its misses are not near-misses a lower threshold
+would recover. Full table: [docs/threshold_curve.csv](docs/threshold_curve.csv).
 
 ```bash
 python tools/false_alert_benchmark.py --n 5000 --seed 42             # ~30 min on 7 cores, no API key needed
 python tools/false_alert_benchmark.py --n 5000 --seed 7 --holdout    # transliterations never used for tuning
+python tools/threshold_curve.py --n 5000 --seed 7 --holdout          # threshold sweep, writes docs/threshold_curve.csv
+python tools/plot_curve.py                                           # redraws docs/threshold_curve.svg
 ```
 
 ## Run it
@@ -205,6 +228,8 @@ triage/
 evaluate.py     scores data/alerts.jsonl
 tools/fetch_lists.py
 tools/false_alert_benchmark.py
+tools/threshold_curve.py, tools/plot_curve.py
+docs/           threshold curve (CSV + SVG)
 ```
 
 All people and companies in `data/` are fictional.

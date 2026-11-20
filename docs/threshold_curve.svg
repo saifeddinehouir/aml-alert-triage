@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 460" width="720" height="460" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="12">
+<style>
+:root{--bg:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--grid:#e1e0d9;--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100}
+@media (prefers-color-scheme: dark){:root{--bg:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--grid:#2c2c2a;--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500}}
+.bg{fill:var(--bg)}.t{fill:var(--ink)}.m{fill:var(--ink2)}.g{stroke:var(--grid);stroke-width:1}
+.s1{stroke:var(--s1)}.s1f{fill:var(--s1)}.s2{stroke:var(--s2)}.s2f{fill:var(--s2)}.s3{stroke:var(--s3)}.s3f{fill:var(--s3)}.s4{stroke:var(--s4)}.s4f{fill:var(--s4)}
+</style>
+<rect class="bg" width="720" height="460" rx="8"/>
+<text class="t" x="64" y="24" font-size="14" font-weight="600">Detection vs false alerts, thresholds 60-95 (seed 7, held-out spellings)</text>
+<line class="g" x1="64.0" x2="64.0" y1="48" y2="404"/>
+<text class="m" x="64.0" y="422" text-anchor="middle">0.1%</text>
+<line class="g" x1="136.5" x2="136.5" y1="48" y2="404"/>
+<text class="m" x="136.5" y="422" text-anchor="middle">0.3%</text>
+<line class="g" x1="216.0" x2="216.0" y1="48" y2="404"/>
+<text class="m" x="216.0" y="422" text-anchor="middle">1%</text>
+<line class="g" x1="288.5" x2="288.5" y1="48" y2="404"/>
+<text class="m" x="288.5" y="422" text-anchor="middle">3%</text>
+<line class="g" x1="368.0" x2="368.0" y1="48" y2="404"/>
+<text class="m" x="368.0" y="422" text-anchor="middle">10%</text>
+<line class="g" x1="440.5" x2="440.5" y1="48" y2="404"/>
+<text class="m" x="440.5" y="422" text-anchor="middle">30%</text>
+<line class="g" x1="520.0" x2="520.0" y1="48" y2="404"/>
+<text class="m" x="520.0" y="422" text-anchor="middle">100%</text>
+<line class="g" x1="64" x2="520" y1="404.0" y2="404.0"/>
+<text class="m" x="56" y="408.0" text-anchor="end">40%</text>
+<line class="g" x1="64" x2="520" y1="344.7" y2="344.7"/>
+<text class="m" x="56" y="348.7" text-anchor="end">50%</text>
+<line class="g" x1="64" x2="520" y1="285.3" y2="285.3"/>
+<text class="m" x="56" y="289.3" text-anchor="end">60%</text>
+<line class="g" x1="64" x2="520" y1="226.0" y2="226.0"/>
+<text class="m" x="56" y="230.0" text-anchor="end">70%</text>
+<line class="g" x1="64" x2="520" y1="166.7" y2="166.7"/>
+<text class="m" x="56" y="170.7" text-anchor="end">80%</text>
+<line class="g" x1="64" x2="520" y1="107.3" y2="107.3"/>
+<text class="m" x="56" y="111.3" text-anchor="end">90%</text>
+<line class="g" x1="64" x2="520" y1="48.0" y2="48.0"/>
+<text class="m" x="56" y="52.0" text-anchor="end">100%</text>
+<text class="m" x="292.0" y="446" text-anchor="middle">false alerts on 5,000 fictional customers (log scale, 0 drawn at 0.1%)</text>
+<text class="m" transform="translate(18 226.0) rotate(-90)" text-anchor="middle">detection of 1,200 altered listed names</text>
+<polyline class="s1" fill="none" stroke-width="2" stroke-linejoin="round" points="517.0,49.0 515.0,49.5 513.1,50.0 510.5,50.0 508.6,50.0 503.6,51.0 503.0,51.0 492.2,51.4 492.2,51.4 488.8,52.0 483.9,52.5 478.8,52.9 470.9,53.5 459.5,54.9 454.9,56.9 451.3,57.9 443.8,60.9 433.1,63.3 427.9,65.3 420.9,67.8 420.8,67.8 409.5,70.2 403.1,72.7 400.7,77.7 398.4,82.1 396.2,85.6 394.1,93.0 393.1,99.9 392.7,105.8 391.5,114.3 391.1,119.7 390.9,130.6 390.8,140.4 390.7,149.9 390.5,161.2 390.5,176.0"/>
+<circle class="s1f" cx="517.0" cy="49.0" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 60: detection 99.8%, false alerts 95.6%</title></circle>
+<circle class="s1f" cx="503.6" cy="51.0" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 65: detection 99.5%, false alerts 78.0%</title></circle>
+<circle class="s1f" cx="483.9" cy="52.5" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 70: detection 99.2%, false alerts 57.9%</title></circle>
+<circle class="s1f" cx="451.3" cy="57.9" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 75: detection 98.3%, false alerts 35.3%</title></circle>
+<circle class="s1f" cx="420.8" cy="67.8" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 80: detection 96.7%, false alerts 22.3%</title></circle>
+<circle class="s1f" cx="396.2" cy="85.6" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 85: detection 93.7%, false alerts 15.3%</title></circle>
+<circle class="s1f" cx="391.1" cy="119.7" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 90: detection 87.9%, false alerts 14.2%</title></circle>
+<circle class="s1f" cx="390.5" cy="176.0" r="4" stroke="var(--bg)" stroke-width="2"><title>token_set, threshold 95: detection 78.4%, false alerts 14.1%</title></circle>
+<text class="m" x="427.8" y="60.8" font-size="11">80</text>
+<circle class="s1f" cx="534" cy="49.0" r="4"/>
+<text class="t" x="544" y="53.0">token_set</text>
+<polyline class="s2" fill="none" stroke-width="2" stroke-linejoin="round" points="515.6,52.0 512.6,52.5 509.2,52.9 504.8,53.5 501.6,53.5 492.1,54.4 490.6,54.9 473.7,60.3 473.6,61.4 465.4,62.8 455.1,66.8 444.8,70.2 439.5,72.2 423.7,75.7 415.1,79.6 407.7,80.6 387.9,89.1 370.2,98.4 361.5,102.4 337.5,112.8 336.4,116.2 315.0,125.1 286.7,134.0 273.2,144.4 254.8,156.8 230.2,170.1 192.5,188.9 170.2,206.2 164.7,223.0 121.8,241.8 102.8,253.7 86.2,270.5 76.0,287.8 76.0,301.6 64.0,319.9 64.0,335.3"/>
+<circle class="s2f" cx="515.6" cy="52.0" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 60: detection 99.3%, false alerts 93.5%</title></circle>
+<circle class="s2f" cx="492.1" cy="54.4" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 65: detection 98.9%, false alerts 65.6%</title></circle>
+<circle class="s2f" cx="455.1" cy="66.8" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 70: detection 96.8%, false alerts 37.4%</title></circle>
+<circle class="s2f" cx="407.7" cy="80.6" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 75: detection 94.5%, false alerts 18.3%</title></circle>
+<circle class="s2f" cx="336.4" cy="116.2" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 80: detection 88.5%, false alerts 6.2%</title></circle>
+<circle class="s2f" cx="230.2" cy="170.1" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 85: detection 79.4%, false alerts 1.2%</title></circle>
+<circle class="s2f" cx="102.8" cy="253.7" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 90: detection 65.3%, false alerts 0.2%</title></circle>
+<circle class="s2f" cx="64.0" cy="335.3" r="4" stroke="var(--bg)" stroke-width="2"><title>token_sort (best simple), threshold 95: detection 51.6%, false alerts 0.1%</title></circle>
+<text class="m" x="343.4" y="109.2" font-size="11">80</text>
+<circle class="s2f" cx="534" cy="67.0" r="4"/>
+<text class="t" x="544" y="71.0">token_sort (best simple)</text>
+<polyline class="s3" fill="none" stroke-width="2" stroke-linejoin="round" points="297.2,82.1 296.0,85.1 294.8,87.6 294.0,90.5 293.2,92.5 291.1,95.9 290.3,98.0 288.1,102.4 287.6,102.9 285.8,107.3 285.8,111.8 284.0,115.8 281.6,118.2 279.1,121.2 278.1,125.6 278.1,127.6 231.3,131.1 231.3,132.1 231.3,133.0 231.3,135.0 231.3,136.0 167.5,136.0 167.5,136.5 164.7,136.5 161.8,137.0 158.7,137.0 158.7,137.0 158.7,137.0 155.5,137.0 155.5,137.0 155.5,137.0 155.5,137.5 155.5,138.0 155.5,138.0 155.5,138.0 155.5,138.0"/>
+<circle class="s3f" cx="297.2" cy="82.1" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 60: detection 94.2%, false alerts 3.4%</title></circle>
+<circle class="s3f" cx="291.1" cy="95.9" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 65: detection 91.9%, false alerts 3.1%</title></circle>
+<circle class="s3f" cx="285.8" cy="111.8" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 70: detection 89.2%, false alerts 2.9%</title></circle>
+<circle class="s3f" cx="278.1" cy="127.6" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 75: detection 86.6%, false alerts 2.6%</title></circle>
+<circle class="s3f" cx="231.3" cy="136.0" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 80: detection 85.2%, false alerts 1.3%</title></circle>
+<circle class="s3f" cx="158.7" cy="137.0" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 85: detection 85.0%, false alerts 0.4%</title></circle>
+<circle class="s3f" cx="155.5" cy="137.0" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 90: detection 85.0%, false alerts 0.4%</title></circle>
+<circle class="s3f" cx="155.5" cy="138.0" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year, threshold 95: detection 84.8%, false alerts 0.4%</title></circle>
+<text class="m" x="238.3" y="129.0" font-size="11">80</text>
+<circle class="s3f" cx="534" cy="82.1" r="4"/>
+<text class="t" x="544" y="86.1">ours + birth year</text>
+<polyline class="s4" fill="none" stroke-width="2" stroke-linejoin="round" points="288.5,79.2 286.7,81.1 284.4,81.1 282.5,83.1 282.1,86.1 282.1,88.5 256.3,91.0 253.3,93.5 252.6,97.0 251.8,99.9 251.8,104.4 217.3,105.4 216.0,108.8 213.3,112.3 213.3,116.2 211.9,118.7 172.8,121.7 172.8,125.6 170.2,127.6 170.2,131.1 170.2,132.1 158.7,133.0 158.7,135.0 155.5,136.0 155.5,136.0 155.5,136.5 155.5,136.5 152.1,137.0 152.1,137.0 144.8,137.0 144.8,137.0 86.2,137.0 86.2,137.0 86.2,137.0 86.2,137.5 86.2,138.0"/>
+<circle class="s4f" cx="288.5" cy="79.2" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 60: detection 94.8%, false alerts 3.0%</title></circle>
+<circle class="s4f" cx="282.1" cy="88.5" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 65: detection 93.2%, false alerts 2.7%</title></circle>
+<circle class="s4f" cx="251.8" cy="104.4" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 70: detection 90.5%, false alerts 1.7%</title></circle>
+<circle class="s4f" cx="211.9" cy="118.7" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 75: detection 88.1%, false alerts 0.9%</title></circle>
+<circle class="s4f" cx="170.2" cy="132.1" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 80: detection 85.8%, false alerts 0.5%</title></circle>
+<circle class="s4f" cx="155.5" cy="136.5" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 85: detection 85.1%, false alerts 0.4%</title></circle>
+<circle class="s4f" cx="144.8" cy="137.0" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 90: detection 85.0%, false alerts 0.3%</title></circle>
+<circle class="s4f" cx="86.2" cy="138.0" r="4" stroke="var(--bg)" stroke-width="2"><title>ours + birth year + nationality, threshold 95: detection 84.8%, false alerts 0.1%</title></circle>
+<text class="m" x="177.2" y="125.1" font-size="11">80</text>
+<circle class="s4f" cx="534" cy="109.2" r="4"/>
+<text class="t" x="544" y="113.2">ours + birth year + nationality</text>
+<text class="m" x="534" y="137.2" font-size="11">dots: thresholds 60, 65 ... 95</text>
+</svg>
