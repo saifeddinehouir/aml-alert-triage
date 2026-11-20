@@ -59,7 +59,16 @@ TRANSLIT = {
     "khalid": ["Khaleid", "Kaled"], "said": ["Saeid", "Saiid"], "mustafa": ["Mostapha", "Mustafah"],
     "qasim": ["Kacem", "Gassim"], "rahman": ["Rahmen"],
 }
+# Written after the screener was tuned on TRANSLIT, and never used to tune it (--holdout).
+TRANSLIT_HOLDOUT = {
+    "muhammad": ["Mohummed", "Muhamet", "Mukhammad"], "ahmad": ["Ahmet", "Akhmed"],
+    "hasan": ["Hasen", "Hassane"], "husayn": ["Housseine", "Huseyin"],
+    "yusuf": ["Iusuf", "Yousouf"], "umar": ["Oumer", "Omer"], "ibrahim": ["Brahim", "Ebrahim"],
+    "khalid": ["Halid", "Khaleed"], "said": ["Sayeed", "Saaid"], "mustafa": ["Moustafa", "Mostefa"],
+    "qasim": ["Kassem", "Qassem"], "rahman": ["Rehman", "Rachman"],
+}
 NATIONALITY = "Morocco"
+_translit = TRANSLIT
 
 
 def customers(n: int, rng: random.Random) -> list[tuple[str, int]]:
@@ -123,7 +132,7 @@ def translit(name: str, rng: random.Random) -> str:
 
     def word(m: re.Match) -> str:
         canon = normalize(m.group(0))
-        return rng.choice(TRANSLIT[canon]) if canon in TRANSLIT else m.group(0)
+        return rng.choice(_translit[canon]) if canon in _translit else m.group(0)
     return re.sub(r"[A-Za-z']+", word, s)
 
 
@@ -204,8 +213,11 @@ def main() -> int:
     ap.add_argument("--probes", type=int, default=300, help="listed individuals per alteration")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 1))
+    ap.add_argument("--holdout", action="store_true", help="use the transliterations never used for tuning")
     args = ap.parse_args()
     rng = random.Random(args.seed)
+    global _translit
+    _translit = TRANSLIT_HOLDOUT if args.holdout else TRANSLIT
 
     entries = load_all(ROOT / "data")
     if not any(e.source != "Sample list (fictional)" for e in entries):

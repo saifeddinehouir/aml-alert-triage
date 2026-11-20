@@ -79,44 +79,74 @@ UN lists (20,602 entries). Since they are invented, every alert is a false alert
 |---|---|
 | plain fuzzy search, `token_set_ratio` >= 80 | 21.8% [20.7-22.9] |
 | plain fuzzy search, `token_sort_ratio` >= 80 (best simple method) | 5.9% [5.3-6.6] |
-| normalization + scoring, name only | 1.2% [1.0-1.6] |
-| normalization + scoring + birth year | 0.4% [0.2-0.6] |
-| normalization + scoring + birth year + nationality | 0.2% [0.1-0.3] |
+| normalization + scoring, name only | 2.6% [2.2-3.1] |
+| normalization + scoring + birth year | 1.1% [0.8-1.4] |
+| normalization + scoring + birth year + nationality | 0.5% [0.4-0.8] |
 
-**Detection costs.** 1,200 real listed individuals with Arabic names, altered in
-ways the normalizer was never taught, screened with their listed birth year:
+**Detection.** 1,200 real listed individuals with Arabic names, altered in ways the
+normalizer's variant table does not cover, screened with their listed birth year:
 
-| alteration | best plain fuzzy (`token_sort`) | normalization + scoring + birth year |
+| alteration | best plain fuzzy (`token_sort`) | v1 | current |
+|---|---|---|---|
+| typo (one letter added, dropped or swapped) | 94.0% | 80.3% | 87.0% |
+| middle name dropped | 83.0% | 86.7% | 98.3% |
+| word order reversed | 100% | 100% | 100% |
+| transliteration not in the variant table (Hacen, Ehmed, Mouhamad...) | 87.0% | 43.7% | 99.3% |
+| **all** | **91.0%** | **77.7%** | **96.2%** [94.9-97.1] |
+
+So against the best plain fuzzy search: false alerts 5.9% -> 1.1% (0.5% with
+nationality), detection 91.0% -> 96.2%.
+
+The first version (v1) had fewer false alerts (0.4%) but found only 77.7%: a typo or
+an unknown transliteration made a name part look rare and missing, and the match was
+rejected. What changed:
+- name parts are also compared by consonant skeleton (Hacen / Hasan / Hassen -> hsn,
+  Youcef / Yusuf -> ysf), with at least three consonants, and a final -i kept
+  (Hassani is not Hasan);
+- one typo is accepted in name parts of four letters or more;
+- a misspelt part takes the rarity weight of the listed part it matches;
+- a missing middle name is accepted only when every other part is spelled as listed
+  and the birth year matches.
+
+Remaining misses are mostly typos inside particles the normalizer splits ("Abudl",
+"Apbdullah"). Remaining false alerts are close namesakes: "Noureddine Idrissi", born
+1965, against the UN's "Drissi Noureddine", born 1964, scores 90 even after the
+nationality mismatch (Morocco vs Tunisia, -10), so the analyst still sees it.
+
+Limits: the names are invented; these changes were made after looking at the v1
+misses on this seed, so the seed-42 figures are not an independent test.
+
+**Held-out check.** Same benchmark, different seed (7), and a second set of
+transliterations written after tuning and never used for it (Ahmet, Mukhammad, Halid,
+Brahim, Omer, Kassem...):
+
+| | best plain fuzzy (`token_sort`) | current |
 |---|---|---|
-| typo (one letter added, dropped or swapped) | 94.0% | 80.3% |
-| middle name dropped | 83.0% | 86.7% |
-| word order reversed | 100% | 100% |
-| transliteration not in the variant table (Hacen, Ehmed, Mouhamad...) | 87.0% | 43.7% |
-| **all** | **91.0%** | **77.7%** |
+| false alerts + birth year | 6.2% | 1.3% [1.0-1.6] |
+| false alerts + birth year + nationality | 6.2% | 0.5% [0.3-0.7] |
+| detection: typo | 93.0% | 85.7% |
+| detection: middle name dropped | 79.3% | 98.3% |
+| detection: word order reversed | 100% | 100% |
+| detection: unseen transliteration | 81.7% | 56.7% |
+| **detection: all** | **88.5%** | **85.2%** [83.0-87.1] |
 
-So: false alerts drop from 5.9% to 0.4%, but on spellings it was not built for,
-the screener finds 77.7% of listed people against 91.0% for the best plain fuzzy
-search. Known cause: a word that appears nowhere in the list (a typo, an unknown
-transliteration) gets the highest rarity weight, so the coverage rule treats it as
-a missing distinctive name part and rejects the match.
-
-The remaining false alerts are near-exact namesakes. Example: "Noureddine Idrissi",
-born 1965, against the UN's "Drissi Noureddine", born 1964. The nationality mismatch
-(Morocco vs Tunisia) costs 10 points but the score stays at 90, so the analyst still
-sees it.
-
-Limits: the names are invented; the matching thresholds were tuned on similar names,
-so this is not an independent test set.
+On spellings it was not tuned on, the screener still misses more unknown
+transliterations than plain fuzzy search: the consonant skeleton does not cover
+final-consonant devoicing (Ahmet / Ahmad, Muhamet), kh / h (Mukhammad, Halid), dropped
+initial vowels (Brahim) or names with fewer than three consonants (Omer, Sayeed). This
+is the honest figure: about 5x fewer false alerts than the best simple method, for
+3 points less detection overall.
 
 ```bash
-python tools/false_alert_benchmark.py --n 5000 --seed 42   # ~15 min on 7 cores, no API key needed
+python tools/false_alert_benchmark.py --n 5000 --seed 42             # ~30 min on 7 cores, no API key needed
+python tools/false_alert_benchmark.py --n 5000 --seed 7 --holdout    # transliterations never used for tuning
 ```
 
 ## Run it
 
 ```bash
 pip install -e ".[dev]"
-pytest                      # 22 tests, no API key needed
+pytest                      # 30 tests, no API key needed
 python evaluate.py          # scores the 20 alerts with the mock writer
 python evaluate.py --llm    # same, with Claude writing the summaries (needs ANTHROPIC_API_KEY)
 

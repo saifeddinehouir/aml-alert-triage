@@ -51,6 +51,16 @@ def test_romanizations_normalize_to_the_same_form(a, b):
     assert normalize(a) == normalize(b)
 
 
+@pytest.mark.parametrize("a,b,same", [
+    ("hacen", "hasan", True), ("youcef", "yusuf", True), ("kacem", "qasim", True),
+    ("mahomed", "muhammad", True), ("mohmamed", "muhammad", True),  # unknown romanization, typo
+    ("alaoui", "ali", False), ("ilyas", "alis", False), ("hassani", "hasan", False),
+])
+def test_close_spellings_without_a_variant_table(a, b, same):
+    from triage.matching import _close_token
+    assert _close_token(a, b) is same
+
+
 def test_birth_year_discounts_a_namesake():
     hits = SCREENER.screen("Elena Marchenko", dob_year=1995, nationality="Ukraine")
     assert not [h for h in hits if not h.discounted]
