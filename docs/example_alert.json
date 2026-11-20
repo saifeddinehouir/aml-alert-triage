@@ -1,0 +1,13 @@
+{
+  "alert_id": "DEMO-01",
+  "trigger": "outgoing wire after cash deposits",
+  "customer": {"name": "Hamza Bennani", "dob_year": 1988, "nationality": "Morocco",
+               "occupation": "import-export", "risk_rating": "medium"},
+  "transactions": [
+    {"id": "T1", "date": "2026-10-01", "amount": 9400, "direction": "in", "channel": "cash"},
+    {"id": "T2", "date": "2026-10-03", "amount": 9700, "direction": "in", "channel": "cash"},
+    {"id": "T3", "date": "2026-10-05", "amount": 9100, "direction": "in", "channel": "cash"},
+    {"id": "T4", "date": "2026-10-06", "amount": 27500, "direction": "out", "channel": "wire",
+     "counterparty_name": "Mahan Air Co", "counterparty_country": "Iran"}
+  ]
+}

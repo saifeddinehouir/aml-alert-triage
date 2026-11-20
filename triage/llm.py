@@ -44,10 +44,14 @@ class AnthropicWriter:
         self.name = f"anthropic:{self.model}"
 
     def write(self, alert: Alert, evidence: list[Evidence]) -> str:
+        # Thinking is on by default on current models and its tokens count against max_tokens,
+        # so the budget must leave room for reasoning plus the JSON answer.
         msg = self.client.messages.create(
-            model=self.model, max_tokens=1200, system=SYSTEM,
+            model=self.model, max_tokens=16000, system=SYSTEM,
             messages=[{"role": "user", "content": build_prompt(alert, evidence)}],
         )
+        if msg.stop_reason in ("max_tokens", "refusal"):
+            raise RuntimeError(f"answer not usable: stop_reason={msg.stop_reason}")
         return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
 
 

@@ -51,6 +51,28 @@ analyst decision ─► audit log (hash-chained, append-only)
 - **Four-eyes on risky closes**: closing a critical case requires a written
   justification; a decided case can't be decided again.
 
+## Example: one case, end to end
+
+A fictional alert ([docs/example_alert.json](docs/example_alert.json)): three cash
+deposits just under 10,000, then a 27,500 wire to "Mahan Air Co" in Iran. The
+customer is invented; the counterparty is a spelling variant of an entity really on
+the OFAC SDN list. Screened against the full OFAC + UN lists, summary written by
+Claude (`claude-sonnet-5-5`) and accepted by the validator:
+
+![API response for the example alert](docs/example_case.png)
+
+The rules found the four red flags (E1-E4) and set the risk level; Claude only wrote
+the text. Every sentence cites its evidence, the counterparty "resembles" a listed
+entry rather than "is" sanctioned, and the case waits for an analyst
+(`pending_review`). The per-hit details folded in the capture (programs, reasons,
+listed identifiers) are in the full response,
+[docs/example_case.json](docs/example_case.json).
+
+The first attempt at this capture fell back to the template: thinking tokens count
+against `max_tokens`, and a limit of 1,200 cut the JSON short. The audit log recorded
+both rejected answers, the limit is now 16,000, and an answer stopped by `max_tokens`
+or a refusal is treated as a provider error and retried.
+
 ## Results on the bundled test set
 
 20 hand-written alerts in `data/alerts.jsonl` against a **fictional** sample list
