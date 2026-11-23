@@ -12,6 +12,13 @@ cites evidence that does not exist, recommends closing a case with critical
 evidence, or states that someone *is* sanctioned. Nothing leaves "pending
 review" without a named analyst.
 
+> **Key result.** Screening 5,000 fictional Moroccan customers against the full OFAC
+> SDN + UN lists, on name spellings never used for tuning: same detection as the best
+> plain fuzzy search (88.5%) with **2.2x fewer false alerts** (2.8% vs 6.2%), and
+> **5x fewer at ~94% detection** (3.4% vs 18.3%). Details and caveats in
+> [False alerts on common Moroccan names](#false-alerts-on-common-moroccan-names-real-lists);
+> a real case summary is in the [example](#example-one-case-end-to-end).
+
 ```
 alert ─► screen customer + counterparties (OFAC SDN, UN consolidated list)
       ─► red-flag rules (structuring, pass-through, high-risk countries, profile)
@@ -96,6 +103,10 @@ person who wrote the rules, not a benchmark.
 names, random birth year, nationality Morocco) screened against the full OFAC SDN +
 UN lists (20,602 entries). Since they are invented, every alert is a false alert.
 95% intervals in brackets.
+
+**Tuning run (seed 42).** The matcher was adjusted after looking at this run's misses,
+so the next two tables show where tuning ended up, not an independent test. The
+independent figures are in the held-out check further down.
 
 | | false alerts |
 |---|---|
